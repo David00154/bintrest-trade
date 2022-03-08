@@ -1,0 +1,54 @@
+@font-face {
+	font-family: "TTFirsNeue-Medium";
+	src: url("/fonts/TTFirsNeue-Medium.ttf");
+}
+@font-face {
+	font-family: "TTFirsNeue-Bold";
+	src: url("/fonts/TTFirsNeue-Bold.ttf");
+}
+@font-face {
+	font-family: "TTFirsNeue-DemiBold";
+	src: url("/fonts/TTFirsNeue-DemiBold.ttf");
+}
+@font-face {
+	font-family: "TTFirsNeue-Regular";
+	src: url("/fonts/TTFirsNeue-Regular.ttf");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (max-width: 1024px) {
+	.nav-links {
+		transition: 0.2s linear;
+		clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+	}
+	.active {
+		clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+	}
+}
+.content-sticky {
+	/* padding: 1rem 0; */
+	/* position: sticky;
+		width: 100vw; */
+	width: 100%;
+	position: sticky;
+	top: 0;
+	right: 0;
+	left: 0;
+	/* box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+			0 2px 4px -2px rgb(0 0 0 / 0.1); */
+	background-color: white;
+}
+@media not all and (max-width: 768px) {
+	.jumbotron h1 {
+		max-width: 425px;
+	}
+	/* .reasons-section div {
+	width: calc((100% / 3) - 8px);
+} */
+}
+/* .footer .box-container .box a:hover i {
+	padding-right: 2rem;
+} */
