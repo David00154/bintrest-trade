@@ -1,18 +1,18 @@
-import { prisma } from "../utils/prisma.mjs";
-import {
+const  { prisma } = require("../utils/prisma.js");
+const {
 	validationResult,
 	body,
 	oneOf,
-} from "express-validator";
-import passport from "passport";
-export const login = (req, res, next) => {
+} = require("express-validator");
+const passport = require("passport");
+ const login = (req, res, next) => {
 	passport.authenticate("local", {
 		successRedirect: "/dashboard",
 		failureRedirect: "/user/login",
 		failureFlash: true,
 	})(req, res, next);
 };
-export const signup = async (req, res) => {
+ const signup = async (req, res) => {
 	const { name, phoneNumber, email, password } = req.body;
 	try {
 		const user = await prisma.user.create({
@@ -36,14 +36,14 @@ export const signup = async (req, res) => {
 	}
 };
 
-export const forwardAuthenticated = (req, res, next) => {
+ const forwardAuthenticated = (req, res, next) => {
 	if (!req.isAuthenticated()) {
 		return next();
 	}
 	res.redirect("/dashboard");
 };
 
-export const validateErrors = (
+ const validateErrors = (
 	req,
 	res,
 	next,
@@ -56,7 +56,7 @@ export const validateErrors = (
 	next();
 };
 
-export const validateSignupFields = oneOf([
+ const validateSignupFields = oneOf([
 	// body(),
 	[
 		body("name")
@@ -91,7 +91,7 @@ export const validateSignupFields = oneOf([
 	],
 ]);
 
-export const ensureAuthenticated = (req, res, next) => {
+ const ensureAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) {
 		return next();
 	}
@@ -99,10 +99,20 @@ export const ensureAuthenticated = (req, res, next) => {
 	res.redirect("/user/login");
 };
 
-export const restrictToAdmin = (req, res, next) => {
+ const restrictToAdmin = (req, res, next) => {
 	if (req.user.isAdmin == true) {
 		return next();
 	}
 	req.flash("error_msg", "Restricted to admin only");
 	res.redirect("/dashboard");
 };
+
+module.exports = {
+	ensureAuthenticated,
+	restrictToAdmin,
+	validateSignupFields,
+	validateErrors,
+	forwardAuthenticated,
+	signup,
+	login
+}

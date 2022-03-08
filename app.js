@@ -1,28 +1,28 @@
-import express from "express";
-import path from "path";
-import cors from "cors";
-import { fileURLToPath } from "url";
-import expressLayouts from "express-ejs-layouts";
-import session from "express-session";
-import flash from "connect-flash";
-import passport from "passport";
-
-import __passport__ from "./utils/passport.mjs";
+const express = require("express");
+const path = require("path")
+const cors = require("cors")
+const { fileURLToPath } = require("url");
+const expressLayouts = require("express-ejs-layouts");
+const session = require("express-session")
+const flash = require("connect-flash")
+const passport = require("passport")
+const {__passport__} = require("./utils/passport.js");
 
 // import appRoute from "./routes/appRoute.js";
 // import userRoute from "./routes/userRoute.js";
 // import adminRoute frp
-import {
+const {
 	adminRoute,
 	userRoute,
 	appRoute,
 	dashboardRoute,
-} from "./routes/index.mjs";
+} =  require("./routes/index.js");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 // console.log(__dirname);
-export const app = express();
+const app = express();
 
 __passport__(passport);
 
@@ -68,3 +68,6 @@ const port = process.env.PORT || 500;
 app.listen(port, () => {
 	console.log(`Server started on port ${port}`);
 });
+
+module.exports = app
+

@@ -1,6 +1,6 @@
-import { Strategy as LocalStrategy } from "passport-local";
-import { prisma } from "./prisma.mjs";
-export default function (passport) {
+const { Strategy: LocalStrategy } = require("passport-local");
+const { prisma } = require("./prisma.js");
+module.exports.__passport__ =  function (passport) {
 	passport.use(
 		new LocalStrategy(
 			{ usernameField: "email" },

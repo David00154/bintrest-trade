@@ -1,13 +1,13 @@
-import express from "express";
-import { body, oneOf } from "express-validator";
-import {
+const express = require("express");
+const { body, oneOf } = require("express-validator");
+const {
 	forwardAuthenticated,
 	login,
 	signup,
 	validateErrors,
 	validateSignupFields,
-} from "../controllers/authController.mjs";
-import { prisma } from "../utils/prisma.mjs";
+} = require("../controllers/authController.js");
+const { prisma } = require("../utils/prisma.js");
 const router = express.Router();
 
 router
@@ -39,4 +39,4 @@ router.get("/logout", (req, res) => {
 	res.redirect("/user/login");
 });
 
-export default router;
+module.exports = router

@@ -1,6 +1,6 @@
-import { oneOf, body, query } from "express-validator";
-import { prisma } from "../utils/prisma.mjs";
-export const sendNotification = async (req, res, next) => {
+const { oneOf, body, query } = require("express-validator");
+const { prisma } = require("../utils/prisma.js");
+ const sendNotification = async (req, res, next) => {
 	const { email, title, body } = req.body;
 	const user = await prisma.user.findUnique({
 		where: {
@@ -22,7 +22,7 @@ export const sendNotification = async (req, res, next) => {
 	res.send("oks");
 };
 
-export const updateUserStat = async (req, res, next) => {
+ const updateUserStat = async (req, res, next) => {
 	const { uid } = req.query;
 	const { earning, balance, deposit, withdraws } = req.body;
 
@@ -40,7 +40,7 @@ export const updateUserStat = async (req, res, next) => {
 	res.json(updatedUser);
 };
 
-export const validateUpdateUserFields = oneOf([
+ const validateUpdateUserFields = oneOf([
 	[
 		query("uid")
 			.exists()
@@ -57,7 +57,7 @@ export const validateUpdateUserFields = oneOf([
 	],
 ]);
 
-export const validateNotificationsFields = oneOf([
+ const validateNotificationsFields = oneOf([
 	[
 		body("title")
 			.notEmpty()
@@ -70,3 +70,10 @@ export const validateNotificationsFields = oneOf([
 			.withMessage("Please select a user email"),
 	],
 ]);
+
+module.exports = {
+	validateNotificationsFields,
+	validateUpdateUserFields,
+	updateUserStat,
+	sendNotification,
+}

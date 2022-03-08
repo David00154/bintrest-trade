@@ -1,16 +1,16 @@
-import express from "express";
-import {
+const express = require("express");
+const {
 	ensureAuthenticated,
 	restrictToAdmin,
 	validateErrors,
-} from "../controllers/authController.mjs";
+} = require("../controllers/authController.js");
 
-import {
+const {
 	sendNotification,
 	validateNotificationsFields,
 	validateUpdateUserFields,
 	updateUserStat,
-} from "../controllers/adminController.mjs";
+} = require("../controllers/adminController.js");
 
 const router = express.Router();
 
@@ -42,5 +42,4 @@ router.post(
 );
 
 // router.route(ensureAuthenticated)
-
-export default router;
+module.exports = router
