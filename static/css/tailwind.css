@@ -49,6 +49,6 @@
 	width: calc((100% / 3) - 8px);
 } */
 }
-/* .footer .box-container .box a:hover i {
+.footer .box-container .box a:hover i {
 	padding-right: 2rem;
-} */
+}
