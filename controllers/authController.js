@@ -15,7 +15,6 @@ const passport = require("passport");
  const signup = async (req, res) => {
 	const { firstname, lastname, phoneNumber, email, password } = req.body;
 
-	try {
 		const user = await prisma.user.create({
 			data: {
 				name: `${firstname} ${lastname}`,
@@ -33,9 +32,6 @@ const passport = require("passport");
 		});
 		req.flash("success_msg", "Signup successful!")
 		res.redirect("/user/login");
-	} catch (error) {
-		throw error;
-	}
 };
 
  const forwardAuthenticated = (req, res, next) => {
