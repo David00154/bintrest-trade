@@ -65,6 +65,7 @@ app.use(function(req, res, next) {
 app.use("/", appRoute);
 app.use("/user", userRoute);
 app.use("/admin", adminRoute);
+app.use("/dashboard", dashboardRoute);
 app.use("*", (req, res) => {
 	res.statusCode = 404;
 	res.send(
