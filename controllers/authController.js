@@ -13,14 +13,15 @@ const passport = require("passport");
 	})(req, res, next);
 };
  const signup = async (req, res) => {
-	const { name, phoneNumber, email, password } = req.body;
+	const { firstname, lastname, phoneNumber, email, password } = req.body;
+
 	try {
 		const user = await prisma.user.create({
 			data: {
-				name,
+				name: `${firstname} ${lastname}`,
 				email,
 				password,
-				phoneNumber,
+				phoneNumber: "",
 				stat: {
 					create: {
 						balance: "0",
@@ -30,7 +31,8 @@ const passport = require("passport");
 				},
 			},
 		});
-		res.redirect("/user/dashboard");
+		req.flash("success_msg", "Signup successful!")
+		res.redirect("/user/login");
 	} catch (error) {
 		throw error;
 	}
@@ -47,11 +49,13 @@ const passport = require("passport");
 	req,
 	res,
 	next,
-	_viewToRender
 ) => {
 	let errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
+		// return res.json({ errors: errors.array() });
+		// console.log(errors.array())
+		req.flash("error_msg", errors.array()[0].nestedErrors[0].msg)
+		res.redirect("/user/signup")
 	}
 	next();
 };
@@ -59,35 +63,34 @@ const passport = require("passport");
  const validateSignupFields = oneOf([
 	// body(),
 	[
-		body("name")
+		body("firstname")
 			// .withMessage("Where is the name??")
 			.notEmpty()
-			.withMessage("The name field should not be empty"),
+			.withMessage("The firstname field should not be empty"),
+		body("lastname")
+			// .withMessage("Where is the name??")
+			.notEmpty()
+			.withMessage("The lastname field should not be empty"),
+		body("password")
+				.notEmpty()
+				.withMessage("The password field should not be empty"),
 		body("email")
 			.notEmpty()
 			.withMessage("The email field should not be empty")
 			.custom(async (email = "") => {
 				console.log(email);
-				const user = await prisma.user.findUnique({
-					where: {
-						email,
-					},
-				});
-				if (user) {
-					throw new Error(
-						"There is an account with this email"
-					);
-				}
-				return true;
+					const user = await prisma.user.findUnique({
+						where: {
+							email,
+						},
+					});
+					if (user) {
+						throw new Error(
+							"There is an account with this email"
+						);
+					} 
+					return true;
 			}),
-		body("phoneNumber")
-			.notEmpty()
-			.withMessage(
-				"The phoneNumber field should not be empty"
-			),
-		body("password")
-			.notEmpty()
-			.withMessage("The password field should not be empty"),
 	],
 ]);
 

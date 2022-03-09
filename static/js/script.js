@@ -21,3 +21,25 @@ const itemsToToggle = document.getElementById(
 menuBtn.onclick = () => {
 	itemsToToggle.classList.toggle("active");
 };
+
+
+const signUpCheckbox = document.getElementById("signup-check-box")
+const authBtn = document.getElementById("auth-menu-btn")
+
+signUpCheckbox.onclick = () => {
+	if(authBtn.disabled) {
+		authBtn.disabled = false
+	} else {
+		authBtn.disabled = true
+	}
+	if(signUpCheckbox.ariaChecked == "false") {
+		signUpCheckbox.ariaChecked = "true"
+		signUpCheckbox.innerHTML = `<svg height="7" viewBox="0 0 10 7" width="10" type="multiple" class="signup-check-box-svg"><path d="M2.05 3.062L.933 4.176l2.629 2.627a.789.789 0 001.115 0L9.934 1.55 8.82.434 4.12 5.131z"></path></svg>`
+	} else {
+		signUpCheckbox.ariaChecked = "false"
+		signUpCheckbox.innerHTML = ""
+	}
+	signUpCheckbox.classList.toggle("signup-check-box-checked")
+} 
+
+const toggleAuthBtnState = () => console.log("Wome")

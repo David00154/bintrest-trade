@@ -45,10 +45,26 @@
 	.jumbotron h1 {
 		max-width: 425px;
 	}
+	.auth-page {
+		min-height: 100vh;
+	}
 	/* .reasons-section div {
 	width: calc((100% / 3) - 8px);
 } */
 }
 .footer .box-container .box a:hover i {
 	padding-right: 2rem;
+}
+
+/* @layer components {
+	.signup-check-box-checked {
+		@apply bg-custom-blue;
+	}
+} */
+.signup-check-box-checked {
+	background-color: #0052ff;
+	border-color: #0052ff;
+}
+.signup-check-box-svg {
+	fill: white;
 }

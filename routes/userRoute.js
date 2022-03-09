@@ -13,24 +13,19 @@ const router = express.Router();
 router
 	.route("/login")
 	.get(forwardAuthenticated, (req, res) => {
-		res.send(`<form action="/user/login" method="post">
-		<input type="text" name="email" id="">
-		<input type="text" name="password" id="">
-	
-		<button type="submit">Submit</button>
-	</form>`);
+		res.render("login", {title: "Log in - Binterest"});
 	})
 	.post(login);
 
 router
 	.route("/signup")
 	.get((req, res) => {
-		res.send("Signup Page");
+		res.render("signup", {title: "Sign up - Binterest"});
 	})
 	.post(
 		validateSignupFields,
 		validateErrors,
-		(req, res, next) => validateErrors(req, res, next, ""),
+		// validateErrors,
 		signup
 	);
 router.get("/logout", (req, res) => {

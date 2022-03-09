@@ -5,6 +5,7 @@ module.exports.__passport__ =  function (passport) {
 		new LocalStrategy(
 			{ usernameField: "email" },
 			async (email, password, done) => {
+				console.log(prisma)
 				const user = await prisma.user.findUnique({
 					where: {
 						email,
