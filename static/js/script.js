@@ -13,6 +13,7 @@ if ("serviceWorker" in navigator) {
 	// });
 }
 
+
 const menuBtn = document.getElementById("menu-btn");
 const itemsToToggle = document.getElementById(
 	"menu-items-to-toggle"
@@ -26,7 +27,13 @@ menuBtn.onclick = () => {
 const signUpCheckbox = document.getElementById("signup-check-box")
 const authBtn = document.getElementById("auth-menu-btn")
 
-signUpCheckbox.onclick = () => {
+if(signUpCheckbox) {
+	signUpCheckbox.onclick = () => toggleAuthBtnState()
+}
+
+
+
+const toggleAuthBtnState = () => {
 	if(authBtn.disabled) {
 		authBtn.disabled = false
 	} else {
@@ -40,6 +47,4 @@ signUpCheckbox.onclick = () => {
 		signUpCheckbox.innerHTML = ""
 	}
 	signUpCheckbox.classList.toggle("signup-check-box-checked")
-} 
-
-const toggleAuthBtnState = () => console.log("Wome")
+}

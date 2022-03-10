@@ -9,6 +9,10 @@ router.route("/about").get((req, res) => {
 	// res.render("about", { title: "About - Bintrest" });
 	res.redirect("/")
 });
+router.route("/contact-us").get((req, res) => {
+	// res.render("about", { title: "About - Bintrest" });
+	res.redirect("/")
+});
 
 
 module.exports = router
