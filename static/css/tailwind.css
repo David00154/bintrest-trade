@@ -322,3 +322,45 @@
 	margin-top: 20px;
 }
 /*# sourceMappingURL=style.css.map */
+
+.profile-photo {
+	width: 2.8rem;
+	height: 2.8rem;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.text-muted {
+	color: var(--color-info-dark);
+}
+
+aside .sidebar a.active {
+	background: rgba(132, 139, 200, 0.18);
+	color: #7380ec;
+	margin-left: 0;
+	/* text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center; */
+}
+
+aside .sidebar a.active::before {
+	content: "";
+	width: 6px;
+	height: 100%;
+	background: #7380ec;
+	height: 100%;
+}
+
+aside .sidebar a.active span {
+	color: #7380ec;
+	margin-left: calc(1rem -3px);
+}
+
+aside .sidebar a:hover span {
+	margin-left: 1rem;
+}
+
+aside .sidebar a:hover .count-badge {
+	margin-left: 0;
+}

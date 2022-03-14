@@ -13,6 +13,22 @@ if ("serviceWorker" in navigator) {
 	// });
 }
 
+let sideBarItem = document.getElementsByClassName("sidebar-item")
+
+// sideBarItem.forEach(item => {
+// 	if(item.href == window.location.href) {
+// 		item.classList.toggle(active)
+// 	}
+// })
+
+for (let index = 0; index < sideBarItem.length; index++) {
+	let item = sideBarItem[index]
+		if(item.href == window.location.href) {
+		item.classList.toggle("active")
+	}	
+}
+
+
 
 const menuBtn = document.getElementById("menu-btn");
 const itemsToToggle = document.getElementById(
@@ -27,7 +43,7 @@ menuBtn.onclick = () => {
 const signUpCheckbox = document.getElementById("signup-check-box")
 const authBtn = document.getElementById("auth-menu-btn")
 
-if(signUpCheckbox) {
+if(signUpCheckbox.onclick) {
 	signUpCheckbox.onclick = () => toggleAuthBtnState()
 }
 
@@ -48,3 +64,8 @@ const toggleAuthBtnState = () => {
 	}
 	signUpCheckbox.classList.toggle("signup-check-box-checked")
 }
+
+
+// const sideBarItem = document.getElementById("sidebar-item")
+
+// console.log(sideBarItem)

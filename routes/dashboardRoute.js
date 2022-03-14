@@ -4,7 +4,17 @@ const { ensureAuthenticated } = require("../controllers/authController.js") ;
 const router = express.Router();
 
 router.route("/").get(ensureAuthenticated, (req, res) => {
-	res.send("<h1>Nothing here yet you dummy!!!</h1>");
+	let name = req.user.name.split(" ")[0]
+	res.render("dashboard", buildObject({title: "Dashboard", layout: "_layouts/dashboard_layout", user: req.user, name}));
 });
+router.route("/notifications").get(ensureAuthenticated, (req, res) => {
+	let name = req.user.name.split(" ")[0]
+	res.render("notifications", buildObject({title: "Notifications", layout: "_layouts/dashboard_layout", name, user: req.user}));
+});
+
+function buildObject(obj) {
+	let {name = "", user = "" , title = ""} = obj
+	return {...obj, name, user, title}
+}
 
 module.exports = router
