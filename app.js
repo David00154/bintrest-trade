@@ -7,6 +7,7 @@ const session = require("express-session")
 const flash = require("connect-flash")
 const passport = require("passport")
 const {__passport__} = require("./utils/passport.js");
+const MongoStore = require('connect-mongo')
 
 // import appRoute from "./routes/appRoute.js";
 // import userRoute from "./routes/userRoute.js";
@@ -41,8 +42,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
 	session({
 		secret: "secret",
-		resave: true,
-		saveUninitialized: true,
+		resave: false,
+		saveUninitialized: false,
+		store: MongoStore.create({
+			mongoUrl: "mongodb://u4fakmxzdkt0pd4msndg:6WDZB5FOhYXzK3jIA3mj@bqydofpk5iljqqq-mongodb.services.clever-cloud.com:27017/bqydofpk5iljqqq",
+			dbName: "bqydofpk5iljqqq",
+			autoRemove: "disabled",
+			touchAfter: 24 * 3600
+		})
 	})
 );
 
