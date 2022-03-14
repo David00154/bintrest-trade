@@ -1,11 +1,15 @@
-<div
-    class="sticky flex flex-row items-center py-[16px] lg:px-[24px] px-[13px] border-b border-b-[rgba(138,145,158,0.2)] w-full lg:justify-between justify-end">
-    <!-- <button id="menu-btn">
-        <span class="material-icons-sharp inline-flex text-[1.6rem]">menu</span>
-    </button> -->
-    <h1 class="md:text-[1.5rem] text-xl font-tf-medium lg:flex hidden lg:ml-6" style="color: var(--text-color)">
-        <%=title%>
-    </h1>
+<div class="content-sticky flex flex-row items-center py-[16px] lg:px-[24px] px-[13px] border-b border-b-[rgba(138,145,158,0.2)] w-full justify-between"
+    style="background: inherit !important;">
+    <div class="items-center flex justify-start">
+        <button id="menu-btn" class="focus:outline-none md:hidden flex">
+            <span class="material-icons-outlined text-[23px] header-icon">
+                menu
+            </span>
+        </button>
+        <h1 class="md:text-[1.5rem] text-xl font-tf-medium lg:flex hidden lg:ml-6" style="color: var(--text-color)">
+            <%=title%>
+        </h1>
+    </div>
     <!-- <div class="theme-toggler">
         <span class="material-icons-sharp active">light_mode</span>
         <span class="material-icons-sharp">dark_mode</span>
@@ -21,7 +25,7 @@
                 style="color: white;">30</span>
         </a>
         <div class="w-[1px] h-10 self-center  mx-3" style="background: var(--text-color);"></div>
-        <div class="profile flex text-right gap-4">
+        <div class="profile flex text-right gap-4 w-full">
             <div class="info">
                 <p class="font-tf-regular" style="color: var(--text-color)">Hey, <b>
                         <%=name%>

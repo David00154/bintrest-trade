@@ -29,6 +29,7 @@ router
 		signup
 	);
 router.get("/logout", (req, res) => {
+	req.session.current_url = ""
 	req.logout();
 	req.flash("success_msg", "You are logged out");
 	res.redirect("/user/login");

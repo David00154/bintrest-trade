@@ -7,11 +7,28 @@ const {
 const passport = require("passport");
  const login = (req, res, next) => {
 	passport.authenticate("local", {
-		successRedirect: "/dashboard",
+		successRedirect: deferPreviosUrl(req.session.current_url),
 		failureRedirect: "/user/login",
 		failureFlash: true,
 	})(req, res, next);
+
 };
+
+function deferPreviosUrl(url) {
+	// console.log("Prev url: "+ url)
+	switch (url) {
+		case "/dashboard/":
+			return "/dashboard/"
+			break;
+		case "/dashboard/notifications":
+			return "/dashboard/notifications"
+			break;
+	
+		default:
+			return "/dashboard/"
+			break;
+	}
+}
  const signup = async (req, res) => {
 	const { firstname, lastname, phoneNumber, email, password } = req.body;
 
@@ -91,6 +108,7 @@ const passport = require("passport");
 ]);
 
  const ensureAuthenticated = (req, res, next) => {
+	//  console.log(req)
 	if (req.isAuthenticated()) {
 		return next();
 	}

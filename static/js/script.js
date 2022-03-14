@@ -13,57 +13,42 @@ if ("serviceWorker" in navigator) {
 	// });
 }
 
-let sideBarItem = document.getElementsByClassName("sidebar-item")
-
-// sideBarItem.forEach(item => {
-// 	if(item.href == window.location.href) {
-// 		item.classList.toggle(active)
-// 	}
-// })
-
-for (let index = 0; index < sideBarItem.length; index++) {
-	let item = sideBarItem[index]
-		if(item.href == window.location.href) {
-		item.classList.toggle("active")
-	}	
-}
 
 
+		const menuBtn = document.getElementById("menu-btn");
+		const itemsToToggle = document.getElementById(
+			"menu-items-to-toggle"
+		);
 
-const menuBtn = document.getElementById("menu-btn");
-const itemsToToggle = document.getElementById(
-	"menu-items-to-toggle"
-);
-
-menuBtn.onclick = () => {
-	itemsToToggle.classList.toggle("active");
-};
+		menuBtn.onclick = () => {
+			itemsToToggle.classList.toggle("active");
+		};
 
 
-const signUpCheckbox = document.getElementById("signup-check-box")
-const authBtn = document.getElementById("auth-menu-btn")
+		const signUpCheckbox = document.getElementById("signup-check-box")
+		const authBtn = document.getElementById("auth-menu-btn")
 
-if(signUpCheckbox.onclick) {
-	signUpCheckbox.onclick = () => toggleAuthBtnState()
-}
+		if (signUpCheckbox) {
+			signUpCheckbox.onclick = () => toggleAuthBtnState()
+		}
 
 
 
-const toggleAuthBtnState = () => {
-	if(authBtn.disabled) {
-		authBtn.disabled = false
-	} else {
-		authBtn.disabled = true
-	}
-	if(signUpCheckbox.ariaChecked == "false") {
-		signUpCheckbox.ariaChecked = "true"
-		signUpCheckbox.innerHTML = `<svg height="7" viewBox="0 0 10 7" width="10" type="multiple" class="signup-check-box-svg"><path d="M2.05 3.062L.933 4.176l2.629 2.627a.789.789 0 001.115 0L9.934 1.55 8.82.434 4.12 5.131z"></path></svg>`
-	} else {
-		signUpCheckbox.ariaChecked = "false"
-		signUpCheckbox.innerHTML = ""
-	}
-	signUpCheckbox.classList.toggle("signup-check-box-checked")
-}
+		const toggleAuthBtnState = () => {
+			if (authBtn.disabled) {
+				authBtn.disabled = false
+			} else {
+				authBtn.disabled = true
+			}
+			if (signUpCheckbox.ariaChecked == "false") {
+				signUpCheckbox.ariaChecked = "true"
+				signUpCheckbox.innerHTML = `<svg height="7" viewBox="0 0 10 7" width="10" type="multiple" class="signup-check-box-svg"><path d="M2.05 3.062L.933 4.176l2.629 2.627a.789.789 0 001.115 0L9.934 1.55 8.82.434 4.12 5.131z"></path></svg>`
+			} else {
+				signUpCheckbox.ariaChecked = "false"
+				signUpCheckbox.innerHTML = ""
+			}
+			signUpCheckbox.classList.toggle("signup-check-box-checked")
+		}
 
 
 // const sideBarItem = document.getElementById("sidebar-item")

@@ -2,6 +2,10 @@ const express = require("express");
 const { ensureAuthenticated } = require("../controllers/authController.js") ;
 
 const router = express.Router();
+router.use((req, res, next) => {
+	req.session.current_url = req.baseUrl + "" + req.url
+	next()
+})
 
 router.route("/").get(ensureAuthenticated, (req, res) => {
 	let name = req.user.name.split(" ")[0]
