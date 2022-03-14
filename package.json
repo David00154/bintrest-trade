@@ -18,8 +18,11 @@
 		"nodemon": "^2.0.15",
 		"postcss": "^8.4.6",
 		"postcss-cli": "^9.1.0",
-		"prisma": "2.30.x",
+		"prisma": "^3.9.1",
 		"tailwindcss": "^3.0.22"
+	},
+	"prisma": {
+		"schema": "prisma/schema.prisma"
 	},
 	"dependencies": {
 		"@prisma/client": "^3.9.1",
