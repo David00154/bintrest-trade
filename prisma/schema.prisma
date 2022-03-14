@@ -2,21 +2,21 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["mongodb"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+
+  url = env("DATABASE_URL")
 }
 
 model User {
-  id           String         @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id           String         @id @default(uuid())
   name         String
   email        String         @unique
   password     String
-  phoneNumber  String         @default("PAP")
+  phoneNumber  String         @default("")
   isAdmin      Boolean        @default(false)
   stat         Stat?
   notification Notification[]
@@ -26,13 +26,13 @@ model User {
 }
 
 model Stat {
-  id        String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id        String   @id @default(uuid())
   deposit   String   @default("0")
   earning   String   @default("0")
   balance   String   @default("0")
   withdraws String   @default("0")
   user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique @db.ObjectId
+  userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
@@ -40,10 +40,10 @@ model Stat {
 }
 
 model Notification {
-  id     String  @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id     String  @id @default(uuid())
   title  String
   body   String
-  userId String  @db.ObjectId
+  userId String
   opened Boolean @default(false)
   user   User    @relation(fields: [userId], references: [id])
 
