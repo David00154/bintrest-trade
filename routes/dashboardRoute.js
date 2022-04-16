@@ -23,6 +23,7 @@ router.route("/").get(ensureAuthenticated, async (req, res) => {
 		let email = req.user.email;
 		let {
 			stat: { balance, deposit, earning, withdraws },
+			notification,
 		} = await prisma.user.findUnique({
 			where: {
 				id: req.user.id,
@@ -34,6 +35,12 @@ router.route("/").get(ensureAuthenticated, async (req, res) => {
 						deposit: true,
 						earning: true,
 						withdraws: true,
+					},
+				},
+				notification: {
+					select: {
+						title: true,
+						date: true,
 					},
 				},
 			},
@@ -49,6 +56,7 @@ router.route("/").get(ensureAuthenticated, async (req, res) => {
 				// deposit,
 				// balance,
 				// withdraws,
+				notification,
 				email: req.user.email,
 				extractScripts: true,
 			})
@@ -75,6 +83,7 @@ router
 			let {
 				stat: { balance, deposit, earning, withdraws },
 				latestTransactions,
+				notification,
 			} = await prisma.user.findUnique({
 				where: {
 					id: req.user.id,
@@ -95,6 +104,12 @@ router
 							date: true,
 						},
 					},
+					notification: {
+						select: {
+							title: true,
+							date: true,
+						},
+					},
 				},
 			});
 			res.render(
@@ -110,6 +125,7 @@ router
 					balance,
 					withdraws,
 					latestTransactions,
+					notification,
 				})
 			);
 		} catch (err) {
@@ -234,6 +250,7 @@ function buildObject(obj) {
 		email = "",
 		extractScripts = true,
 		latestTransactions = [],
+		notification = [],
 	} = obj;
 	return {
 		...obj,
@@ -247,6 +264,7 @@ function buildObject(obj) {
 		email,
 		extractScripts,
 		latestTransactions,
+		notifications: notification,
 	};
 }
 

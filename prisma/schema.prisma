@@ -43,7 +43,8 @@ model Notification {
   userId String
   opened Boolean @default(false)
   user   User    @relation(fields: [userId], references: [id])
-
+  date String
+  createdAt DateTime @default(now())
   @@map("notifications")
 }
 
