@@ -1,79 +1,114 @@
-const  { prisma } = require("../utils/prisma.js");
+const { prisma } = require("../utils/prisma.js");
 const {
 	validationResult,
 	body,
 	oneOf,
 } = require("express-validator");
 const passport = require("passport");
- const login = (req, res, next) => {
+const login = (req, res, next) => {
 	passport.authenticate("local", {
-		successRedirect: deferPreviosUrl(req.session.current_url),
+		successRedirect: deferPreviousUrl(req.session.current_url),
 		failureRedirect: "/user/login",
 		failureFlash: true,
 	})(req, res, next);
-
 };
 
-function deferPreviosUrl(url) {
+function deferPreviousUrl(url) {
 	// console.log("Prev url: "+ url)
 	switch (url) {
 		case "/dashboard/":
-			return "/dashboard/"
+			return "/dashboard/";
 			break;
 		case "/dashboard/notifications":
-			return "/dashboard/notifications"
+			return "/dashboard/notifications";
 			break;
-	
+		case "/dashboard/wallet":
+			return "/dashboard/wallet";
+			break;
+		case "/dashboard/withdraw":
+			return "/dashboard/withdraw";
+			break;
+		case "/dashboard/markets":
+			return "/dashboard/markets";
+			break;
+
 		default:
-			return "/dashboard/"
+			return "/dashboard/";
 			break;
 	}
 }
- const signup = async (req, res) => {
-	const { firstname, lastname, phoneNumber, email, password } = req.body;
+const signup = async (req, res) => {
+	const { firstname, lastname, phoneNumber, email, password } =
+		req.body;
 
-		const user = await prisma.user.create({
-			data: {
-				name: `${firstname} ${lastname}`,
-				email,
-				password,
-				phoneNumber: "",
-				stat: {
-					create: {
-						balance: "0",
-						earning: "0",
-						withdraws: "0",
-					},
+	const user = await prisma.user.create({
+		data: {
+			name: `${firstname} ${lastname}`,
+			email,
+			password,
+			phoneNumber: "",
+			stat: {
+				create: {
+					balance: "0",
+					earning: "0",
+					withdraws: "0",
 				},
 			},
-		});
-		req.flash("success_msg", "Signup successful!")
-		res.redirect("/user/login");
+		},
+	});
+	req.flash("success_msg", "Signup successful!");
+	res.redirect("/user/login");
 };
 
- const forwardAuthenticated = (req, res, next) => {
+const forwardAuthenticated = (req, res, next) => {
 	if (!req.isAuthenticated()) {
 		return next();
 	}
 	res.redirect("/dashboard");
 };
 
- const validateErrors = (
-	req,
-	res,
-	next,
-) => {
+const validateErrors = (req, res, next) => {
 	let errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		// return res.json({ errors: errors.array() });
 		// console.log(errors.array())
-		req.flash("error_msg", errors.array()[0].nestedErrors[0].msg)
-		res.redirect("/user/signup")
+		req.flash(
+			"error_msg",
+			errors.array()[0].nestedErrors[0].msg
+		);
+		res.redirect("/user/signup");
 	}
 	next();
 };
 
- const validateSignupFields = oneOf([
+const validateFormErrors = (req, res, next, fallbackUrl) => {
+	let errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		// return res.json({ errors: errors.array() });
+		// console.log(errors.array())
+		req.flash(
+			"error_msg",
+			errors.array()[0].nestedErrors[0].msg
+		);
+		res.redirect(`${fallbackUrl}`);
+	}
+	next();
+};
+
+const validateWithdrawFormFields = oneOf([
+	[
+		body("address")
+			.notEmpty()
+			.withMessage(
+				"The wallet address field should not be empty"
+			),
+		body("amount")
+			.notEmpty()
+			.withMessage("The amount field should not be empty"),
+	],
+]);
+
+const validateSignupFields = oneOf([
 	// body(),
 	[
 		body("firstname")
@@ -85,29 +120,29 @@ function deferPreviosUrl(url) {
 			.notEmpty()
 			.withMessage("The lastname field should not be empty"),
 		body("password")
-				.notEmpty()
-				.withMessage("The password field should not be empty"),
+			.notEmpty()
+			.withMessage("The password field should not be empty"),
 		body("email")
 			.notEmpty()
 			.withMessage("The email field should not be empty")
 			.custom(async (email = "") => {
 				console.log(email);
-					const user = await prisma.user.findUnique({
-						where: {
-							email,
-						},
-					});
-					if (user) {
-						throw new Error(
-							"There is an account with this email"
-						);
-					} 
-					return true;
+				const user = await prisma.user.findUnique({
+					where: {
+						email,
+					},
+				});
+				if (user) {
+					throw new Error(
+						"There is an account with this email"
+					);
+				}
+				return true;
 			}),
 	],
 ]);
 
- const ensureAuthenticated = (req, res, next) => {
+const ensureAuthenticated = (req, res, next) => {
 	//  console.log(req)
 	if (req.isAuthenticated()) {
 		return next();
@@ -116,7 +151,7 @@ function deferPreviosUrl(url) {
 	res.redirect("/user/login");
 };
 
- const restrictToAdmin = (req, res, next) => {
+const restrictToAdmin = (req, res, next) => {
 	if (req.user.isAdmin == true) {
 		return next();
 	}
@@ -131,5 +166,7 @@ module.exports = {
 	validateErrors,
 	forwardAuthenticated,
 	signup,
-	login
-}
+	login,
+	validateFormErrors,
+	validateWithdrawFormFields,
+};

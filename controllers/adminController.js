@@ -1,6 +1,6 @@
 const { oneOf, body, query } = require("express-validator");
 const { prisma } = require("../utils/prisma.js");
- const sendNotification = async (req, res, next) => {
+const sendNotification = async (req, res, next) => {
 	const { email, title, body } = req.body;
 	const user = await prisma.user.findUnique({
 		where: {
@@ -22,7 +22,7 @@ const { prisma } = require("../utils/prisma.js");
 	res.send("oks");
 };
 
- const updateUserStat = async (req, res, next) => {
+const updateUserStat = async (req, res, next) => {
 	const { uid } = req.query;
 	const { earning, balance, deposit, withdraws } = req.body;
 
@@ -40,7 +40,7 @@ const { prisma } = require("../utils/prisma.js");
 	res.json(updatedUser);
 };
 
- const validateUpdateUserFields = oneOf([
+const validateUpdateUserFields = oneOf([
 	[
 		query("uid")
 			.exists()
@@ -57,7 +57,7 @@ const { prisma } = require("../utils/prisma.js");
 	],
 ]);
 
- const validateNotificationsFields = oneOf([
+const validateNotificationsFields = oneOf([
 	[
 		body("title")
 			.notEmpty()
@@ -76,4 +76,4 @@ module.exports = {
 	validateUpdateUserFields,
 	updateUserStat,
 	sendNotification,
-}
+};
