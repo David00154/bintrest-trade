@@ -81,7 +81,7 @@ const validateErrors = (req, res, next) => {
 	next();
 };
 
-const validateFormErrors = (req, res, next, fallbackUrl) => {
+const validateWithdrawFormErrors = (req, res, next) => {
 	let errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		// return res.json({ errors: errors.array() });
@@ -90,7 +90,7 @@ const validateFormErrors = (req, res, next, fallbackUrl) => {
 			"error_msg",
 			errors.array()[0].nestedErrors[0].msg
 		);
-		res.redirect(`${fallbackUrl}`);
+		res.redirect("/dashboard/withdraw");
 	}
 	next();
 };
@@ -167,6 +167,6 @@ module.exports = {
 	forwardAuthenticated,
 	signup,
 	login,
-	validateFormErrors,
+	validateWithdrawFormErrors,
 	validateWithdrawFormFields,
 };

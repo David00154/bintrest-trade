@@ -3,7 +3,7 @@ const {
 	ensureAuthenticated,
 	validateWithdrawFormFields,
 	validateErrors,
-	validateFormErrors,
+	validateWithdrawFormErrors,
 } = require("../controllers/authController.js");
 const { prisma } = require("../utils/prisma.js");
 
@@ -24,6 +24,7 @@ router.route("/").get(ensureAuthenticated, async (req, res) => {
 		let {
 			stat: { balance, deposit, earning, withdraws },
 			notification,
+			latestTransactions,
 		} = await prisma.user.findUnique({
 			where: {
 				id: req.user.id,
@@ -35,6 +36,13 @@ router.route("/").get(ensureAuthenticated, async (req, res) => {
 						deposit: true,
 						earning: true,
 						withdraws: true,
+					},
+				},
+				latestTransactions: {
+					select: {
+						amount: true,
+						status: true,
+						date: true,
 					},
 				},
 				notification: {
@@ -52,13 +60,14 @@ router.route("/").get(ensureAuthenticated, async (req, res) => {
 				layout: "backend/layout",
 				user: req.user,
 				name,
-				// earning,
-				// deposit,
-				// balance,
-				// withdraws,
+				earning,
+				deposit,
+				balance,
+				withdraws,
 				notification,
 				email: req.user.email,
 				extractScripts: true,
+				latestTransactions,
 			})
 		);
 	} catch (err) {
@@ -169,22 +178,22 @@ router
 	})
 	.post(
 		validateWithdrawFormFields,
-		(req, res, next) =>
-			validateFormErrors(
-				req,
-				res,
-				next,
-				"/dashboard/withdraw"
-			),
-		async (req, res, next) => {
+		validateWithdrawFormErrors,
+		async (req, res) => {
 			const { amount } = req.body;
+			let name =
+				req.user.name.split(" ")[0][0].toUpperCase() +
+				req.user.name.split(" ")[0].slice(1);
+			let user = req.user;
+			let email = req.user.email;
+
 			let date =
 				new Date(Date.now()).getFullYear() +
 				"-" +
 				(new Date(Date.now()).getMonth() + 1) +
 				"-" +
 				new Date(Date.now()).getDate(); // yyyy-mm-dd
-			try {
+			const latestTransaction =
 				await prisma.latestTransaction.create({
 					data: {
 						amount,
@@ -193,31 +202,11 @@ router
 						date,
 					},
 				});
-				req.flash(
-					"success_msg",
-					"Your withdrawal request is processing, we will send you feedback."
-				);
-				res.redirect("/dashboard/withdraw");
-				// next();
-			} catch (error) {
-				console.log(error);
-				req.flash(
-					"error_msg",
-					"There was an error trying to process the request."
-				);
-				// res.redirect("/dashboard/withdraw");
-				// next();
-				res.render(
-					"backend/withdraw",
-					buildObject({
-						title: "Withdraw",
-						layout: "backend/layout",
-						user,
-						name,
-						email,
-					})
-				);
-			}
+			req.flash(
+				"success_msg",
+				"Your withdrawal request is processing, we will send you feedback."
+			);
+			res.redirect("/dashboard/withdraw");
 		}
 	);
 
@@ -238,6 +227,66 @@ router
 		);
 	});
 
+router
+	.route("/markets")
+	.get(ensureAuthenticated, async (req, res) => {
+		// console.log(req.user.id);
+		try {
+			let name =
+				req.user.name.split(" ")[0][0].toUpperCase() +
+				req.user.name.split(" ")[0].slice(1);
+			let user = req.user;
+			let email = req.user.email;
+			let {
+				stat: { balance, deposit, earning, withdraws },
+				notification,
+			} = await prisma.user.findUnique({
+				where: {
+					id: req.user.id,
+				},
+				select: {
+					stat: {
+						select: {
+							balance: true,
+							deposit: true,
+							earning: true,
+							withdraws: true,
+						},
+					},
+					notification: {
+						select: {
+							title: true,
+							date: true,
+						},
+					},
+				},
+			});
+			res.render(
+				"backend/markets",
+				buildObject({
+					title: "Markets",
+					layout: "backend/layout",
+					user: req.user,
+					name,
+					// earning,
+					// deposit,
+					// balance,
+					// withdraws,
+					notification,
+					email: req.user.email,
+					extractScripts: true,
+				})
+			);
+		} catch (err) {
+			console.log(err);
+			req.flash(
+				"error_msg",
+				"Error trying to locate the page, try loging in."
+			);
+			res.redirect("/user/login");
+		}
+	});
+
 function buildObject(obj) {
 	let {
 		name = "",
@@ -251,6 +300,7 @@ function buildObject(obj) {
 		extractScripts = true,
 		latestTransactions = [],
 		notification = [],
+		success_msg = "",
 	} = obj;
 	return {
 		...obj,
@@ -265,6 +315,7 @@ function buildObject(obj) {
 		extractScripts,
 		latestTransactions,
 		notifications: notification,
+		success_msg,
 	};
 }
 
