@@ -263,22 +263,22 @@ router
 		}
 	);
 
-router
-	.route("/notifications")
-	.get(ensureAuthenticated, (req, res) => {
-		let name =
-			req.user.name.split(" ")[0][0].toUpperCase() +
-			req.user.name.split(" ")[0].slice(1);
-		res.render(
-			"notifications",
-			buildObject({
-				title: "Notifications",
-				layout: "_layouts/dashboard_layout",
-				name,
-				user: req.user,
-			})
-		);
-	});
+// router
+// 	.route("/notifications")
+// 	.get(ensureAuthenticated, (req, res) => {
+// 		let name =
+// 			req.user.name.split(" ")[0][0].toUpperCase() +
+// 			req.user.name.split(" ")[0].slice(1);
+// 		res.render(
+// 			"notifications",
+// 			buildObject({
+// 				title: "Notifications",
+// 				layout: "_layouts/dashboard_layout",
+// 				name,
+// 				user: req.user,
+// 			})
+// 		);
+// 	});
 
 router
 	.route("/markets")

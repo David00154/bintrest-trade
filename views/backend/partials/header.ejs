@@ -21,6 +21,9 @@
     <div class="collapse navbar-collapse" id="headerMenu">
       <ul class="navbar-nav mr-auto">
         <a class="nav-link" href="/dashboard">Exchange</a>
+        <% if (user.isAdmin) { %>
+        <a class="nav-link" href="/admin/">Admin</a>
+        <% } %>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Markets

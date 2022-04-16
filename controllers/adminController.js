@@ -6,25 +6,33 @@ const sendNotification = async (req, res, next) => {
 		where: {
 			email: email,
 		},
-		select: {
-			id: true,
-		},
 	});
+
+	let date =
+		new Date(Date.now()).getFullYear() +
+		"-" +
+		(new Date(Date.now()).getMonth() + 1) +
+		"-" +
+		new Date(Date.now()).getDate(); // yyyy-mm-dd
 
 	const sentNotification = await prisma.notification.create({
 		data: {
 			body,
 			title,
 			userId: user.id,
+			date,
 		},
 	});
 	console.log(sentNotification);
-	res.send("oks");
+	// res.send("oks");
+	req.flash("success_msg", "Notification sent");
+	res.redirect("/admin/send-notification");
+	next();
 };
 
 const updateUserStat = async (req, res, next) => {
-	const { uid } = req.query;
-	const { earning, balance, deposit, withdraws } = req.body;
+	const { earning, balance, deposit, withdraws, uid } =
+		req.body;
 
 	const updatedUser = await prisma.stat.update({
 		where: {
@@ -37,17 +45,22 @@ const updateUserStat = async (req, res, next) => {
 			withdraws,
 		},
 	});
-	res.json(updatedUser);
+	req.flash("success_msg", "User updated");
+	res.redirect("/admin/update-person");
+	next();
 };
-
+//
 const validateUpdateUserFields = oneOf([
 	[
-		query("uid")
+		body("uid")
 			.exists()
-			.withMessage("Select a user to update"),
+			.withMessage("Enter a user id to update"),
 		body("earning")
 			.notEmpty()
 			.withMessage("Please add earning for the user"),
+		body("deposit")
+			.notEmpty()
+			.withMessage("Please add deposit for the user"),
 		body("balance")
 			.notEmpty()
 			.withMessage("Please add balance for the user"),
