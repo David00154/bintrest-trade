@@ -76,25 +76,23 @@ const validateErrors = (req, res, next) => {
 			"error_msg",
 			errors.array()[0].nestedErrors[0].msg
 		);
-		res.redirect("/user/signup");
+		return res.redirect("back");
 	}
 	next();
 };
 
-const validateWithdrawFormErrors = (req, res, next) => {
-	let errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		// return res.json({ errors: errors.array() });
-		// console.log(errors.array())
-		req.flash(
-			"error_msg",
-			errors.array()[0].nestedErrors[0].msg
-		);
-		res.redirect("/dashboard/withdraw");
-	}
-	next();
-};
-
+const validateDepositFormFields = oneOf([
+	[
+		body("address")
+			.notEmpty()
+			.withMessage(
+				"Specify the address your making the deposit from"
+			),
+		body("amount")
+			.notEmpty()
+			.withMessage("Specify the amount you wish to deposit"),
+	],
+]);
 const validateWithdrawFormFields = oneOf([
 	[
 		body("address")
@@ -167,6 +165,6 @@ module.exports = {
 	forwardAuthenticated,
 	signup,
 	login,
-	validateWithdrawFormErrors,
+	validateDepositFormFields,
 	validateWithdrawFormFields,
 };

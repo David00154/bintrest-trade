@@ -76,12 +76,12 @@ app.use("/", appRoute);
 app.use("/user", userRoute);
 app.use("/admin", adminRoute);
 app.use("/dashboard", dashboardRoute);
-app.use("*", (req, res) => {
-	res.statusCode = 404;
-	res.send(
-		`Path "${req.baseUrl}" with method ${req.method} not found.`
-	);
-});
+// app.use("*", (req, res) => {
+// 	res.statusCode = 404;
+// 	res.send(
+// 		`Path "${req.baseUrl}" with method ${req.method} not found.`
+// 	);
+// });
 
 const port = process.env.PORT || 500;
 

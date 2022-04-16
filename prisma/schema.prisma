@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(uuid())
-  name         String
-  email        String         @unique
-  password     String
-  phoneNumber  String         @default("")
-  isAdmin      Boolean        @default(false)
-  createdAt    DateTime       @default(now())
-  notification Notification[]
-   latestTransactions LatestTransaction[]
-  stat         Stat?
+  id                 String              @id @default(uuid())
+  name               String
+  email              String              @unique
+  password           String
+  phoneNumber        String              @default("")
+  isAdmin            Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  notification       Notification[]
+  latestTransactions LatestTransaction[]
+  deposits           Deposit[]
+  stat               Stat?
 
   @@map("users")
 }
@@ -37,14 +38,15 @@ model Stat {
 }
 
 model Notification {
-  id     String  @id @default(uuid())
-  title  String
-  body   String
-  userId String
-  opened Boolean @default(false)
-  user   User    @relation(fields: [userId], references: [id])
-  date String
+  id        String   @id @default(uuid())
+  title     String
+  body      String
+  userId    String
+  opened    Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  date      String
   createdAt DateTime @default(now())
+
   @@map("notifications")
 }
 
@@ -57,12 +59,26 @@ model session {
 }
 
 model LatestTransaction {
-  id     String  @id @default(uuid())
-  userId String
-  amount String
-  status Boolean @default(false)
-  date String
+  id        String   @id @default(uuid())
+  userId    String
+  amount    String
+  status    Boolean  @default(false)
+  date      String
   createdAt DateTime @default(now())
-  user   User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
   @@map("latest-transactions")
+}
+
+model Deposit {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    String
+  address   String
+  recieved  Boolean  @default(false)
+  date      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("deposits")
 }

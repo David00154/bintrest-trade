@@ -3,7 +3,7 @@ const {
 	ensureAuthenticated,
 	validateWithdrawFormFields,
 	validateErrors,
-	validateWithdrawFormErrors,
+	validateDepositFormFields,
 } = require("../controllers/authController.js");
 const { prisma } = require("../utils/prisma.js");
 
@@ -177,15 +177,11 @@ router
 		}
 	})
 	.post(
+		ensureAuthenticated,
 		validateWithdrawFormFields,
-		validateWithdrawFormErrors,
-		async (req, res) => {
+		validateErrors,
+		async (req, res, next) => {
 			const { amount } = req.body;
-			let name =
-				req.user.name.split(" ")[0][0].toUpperCase() +
-				req.user.name.split(" ")[0].slice(1);
-			let user = req.user;
-			let email = req.user.email;
 
 			let date =
 				new Date(Date.now()).getFullYear() +
@@ -204,9 +200,66 @@ router
 				});
 			req.flash(
 				"success_msg",
-				"Your withdrawal request is processing, we will send you feedback."
+				"Your withdrawal request is processing, we will send you feedback soon."
 			);
 			res.redirect("/dashboard/withdraw");
+		}
+	);
+
+router
+	.route("/deposit")
+	.get(ensureAuthenticated, async (req, res) => {
+		try {
+			let name =
+				req.user.name.split(" ")[0][0].toUpperCase() +
+				req.user.name.split(" ")[0].slice(1);
+			let user = req.user;
+			let email = req.user.email;
+			res.render(
+				"backend/deposit",
+				buildObject({
+					title: "Deposit",
+					layout: "backend/layout",
+					user,
+					name,
+					email,
+				})
+			);
+		} catch (err) {
+			console.log(err);
+			req.flash(
+				"error_msg",
+				"Error trying to locate the page, try loging in."
+			);
+			res.redirect("/user/login");
+		}
+	})
+	.post(
+		ensureAuthenticated,
+		validateDepositFormFields,
+		validateErrors,
+		async (req, res) => {
+			const { amount, address } = req.body;
+			let date =
+				new Date(Date.now()).getFullYear() +
+				"-" +
+				(new Date(Date.now()).getMonth() + 1) +
+				"-" +
+				new Date(Date.now()).getDate(); // yyyy-mm-dd
+			const latestTransaction = await prisma.deposit.create({
+				data: {
+					userId: req.user.id,
+					address,
+					amount,
+					date,
+					recieved: false,
+				},
+			});
+			req.flash(
+				"success_msg",
+				"We will update your assets when our systems has verified the deposit."
+			);
+			res.redirect("/dashboard/deposit");
 		}
 	);
 
@@ -300,7 +353,7 @@ function buildObject(obj) {
 		extractScripts = true,
 		latestTransactions = [],
 		notification = [],
-		success_msg = "",
+		// success_msg = "",
 	} = obj;
 	return {
 		...obj,
@@ -315,7 +368,7 @@ function buildObject(obj) {
 		extractScripts,
 		latestTransactions,
 		notifications: notification,
-		success_msg,
+		// success_msg,
 	};
 }
 
