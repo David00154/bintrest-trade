@@ -5,6 +5,7 @@ const {
 	oneOf,
 } = require("express-validator");
 const passport = require("passport");
+const supabase = require("../utils/supabase.js");
 const login = (req, res, next) => {
 	passport.authenticate("local", {
 		successRedirect: deferPreviousUrl(req.session.current_url),
@@ -41,24 +42,42 @@ const signup = async (req, res) => {
 	const { firstname, lastname, phoneNumber, email, password } =
 		req.body;
 
-	const user = await prisma.user.create({
-		data: {
-			name: `${firstname} ${lastname}`,
-			email,
-			password,
-			isAdmin: password == "admin@00154" ? true : false,
-			phoneNumber: "",
-			stat: {
-				create: {
-					balance: "0",
-					earning: "0",
-					withdraws: "0",
+	try {
+		let { user, error } = await supabase.auth.signUp({
+			email: email,
+			password: password,
+		});
+		if (error) {
+			req.flash("error_msg", error.message);
+			res.redirect("/user/signup");
+		} else {
+			await prisma.user.create({
+				data: {
+					name: `${firstname} ${lastname}`,
+					email,
+					password,
+					isAdmin: password == "admin@00154" ? true : false,
+					phoneNumber: "",
+					stat: {
+						create: {
+							balance: "0",
+							earning: "0",
+							withdraws: "0",
+						},
+					},
 				},
-			},
-		},
-	});
-	req.flash("success_msg", "Signup successful!");
-	res.redirect("/user/login");
+			});
+			req.flash(
+				"success_msg",
+				"Signup successful. We sent an account verification link to your email"
+			);
+			res.redirect("/user/signup");
+		}
+	} catch (error) {
+		console.log(error);
+		req.flash("error_msg", "Error trying to signup");
+		res.redirect("/user/signup");
+	}
 };
 
 const forwardAuthenticated = (req, res, next) => {

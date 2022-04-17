@@ -13,14 +13,25 @@ const router = express.Router();
 router
 	.route("/login")
 	.get(forwardAuthenticated, (req, res) => {
-		res.render("login", {title: "Log in - Binterest"});
+		res.render("login", { title: "Log in - Binterest" });
 	})
 	.post(login);
+
+router.route("/authorize").get((req, res) => {
+	// console.log(req.query);
+	console.log("authorizing and redirecting...");
+	//
+	req.flash(
+		"success_msg",
+		"Account verified, now you can login"
+	);
+	res.redirect("/user/login");
+});
 
 router
 	.route("/signup")
 	.get((req, res) => {
-		res.render("signup", {title: "Sign up - Binterest"});
+		res.render("signup", { title: "Sign up - Binterest" });
 	})
 	.post(
 		validateSignupFields,
@@ -29,11 +40,10 @@ router
 		signup
 	);
 router.get("/logout", (req, res) => {
-	req.session.current_url = ""
+	req.session.current_url = "";
 	req.logout();
 	req.flash("success_msg", "You are logged out");
 	res.redirect("/user/login");
 });
 
-
-module.exports = router
+module.exports = router;

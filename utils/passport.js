@@ -1,26 +1,39 @@
 const { Strategy: LocalStrategy } = require("passport-local");
 const { prisma } = require("./prisma.js");
-module.exports.__passport__ =  function (passport) {
+const supabase = require("./supabase.js");
+module.exports.__passport__ = function (passport) {
 	passport.use(
 		new LocalStrategy(
 			{ usernameField: "email" },
 			async (email, password, done) => {
 				// console.log(prisma)
-				const user = await prisma.user.findUnique({
-					where: {
-						email,
-					},
+
+				let { user, error } = await supabase.auth.signIn({
+					email: email,
+					password: password,
 				});
-				if (!user) {
+
+				if (error) {
 					return done(null, false, {
-						message: "That email is not registered",
+						message: error.message,
 					});
-				} else if (user && user.password !== password) {
-					return done(null, false, {
-						message: "Password incorrect",
+				} else {
+					const _user = await prisma.user.findUnique({
+						where: {
+							email,
+						},
 					});
+					if (!_user) {
+						return done(null, false, {
+							message: "That email is not registered",
+						});
+					} else if (_user && _user.password !== password) {
+						return done(null, false, {
+							message: "Password incorrect",
+						});
+					}
+					return done(null, _user);
 				}
-				return done(null, user);
 			}
 		)
 	);
@@ -36,4 +49,4 @@ module.exports.__passport__ =  function (passport) {
 		});
 		done(null, user);
 	});
-}
+};
