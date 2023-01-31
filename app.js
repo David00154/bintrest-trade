@@ -69,13 +69,13 @@ app.use(function (req, res, next) {
 });
 //
 // routes
-// app.use("/", appRoute);
-// app.use("/user", userRoute);
-// app.use("/admin", adminRoute);
-// app.use("/dashboard", dashboardRoute);
-app.get("*", (req, res) => {
-	res.render("500", { layout: false });
-});
+app.use("/", appRoute);
+app.use("/user", userRoute);
+app.use("/admin", adminRoute);
+ app.use("/dashboard", dashboardRoute);
+//app.get("*", (req, res) => {
+//	res.render("500", { layout: false });
+//});
 // app.use("*", (req, res) => {
 // 	res.statusCode = 404;
 // 	res.send(
