@@ -22,7 +22,6 @@ const { adminRoute, userRoute, appRoute, dashboardRoute } = require("./routes/in
 const app = express();
 
 __passport__(passport);
-
 // middlewares;
 app.use(cors());
 // EJS
