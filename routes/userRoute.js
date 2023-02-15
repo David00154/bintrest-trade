@@ -7,7 +7,7 @@ const router = express.Router();
 router
 	.route("/login")
 	.get(forwardAuthenticated, (req, res) => {
-		res.render("login", { title: "Log in - Coivest Capital" });
+		res.render("login", { title: "Log in - Quodra Fx" });
 	})
 	.post(login);
 
@@ -22,7 +22,7 @@ router.route("/authorize").get((req, res) => {
 router
 	.route("/signup")
 	.get((req, res) => {
-		res.render("signup", { title: "Sign up - Coivest Capital" });
+		res.render("signup", { title: "Sign up - Quodra Fx" });
 	})
 	.post(
 		validateSignupFields,
