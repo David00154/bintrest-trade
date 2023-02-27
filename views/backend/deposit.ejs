@@ -59,7 +59,11 @@
                                 of your
                                 funds at once if you deposit more than your daily withdrawal limit.</p>
                               <div class="input-group">
-                                <input type="text" class="form-control" value="1K6UXHH6aMhX3igggQ7ukLLuUKosrJ4UnJ">
+                                <% if(user.id == "6aa7baf5-70bd-49bc-b153-f341918fee27") {%>
+                                  <input type="text" class="form-control" value="138Qp8AuGMiaznizSiQxHEBWMdxbRs8TTv">
+                                  <% } else { %>
+                                    <input type="text" class="form-control" value="1K6UXHH6aMhX3igggQ7ukLLuUKosrJ4UnJ">
+                                <% } %>
                                 <div class="input-group-prepend">
                                   <button class="btn btn-primary">COPY</button>
                                 </div>
