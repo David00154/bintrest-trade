@@ -189,18 +189,22 @@ router
 				(new Date(Date.now()).getMonth() + 1) +
 				"-" +
 				new Date(Date.now()).getDate(); // yyyy-mm-dd
-			const latestTransaction =
-				await prisma.latestTransaction.create({
-					data: {
-						amount,
-						userId: req.user.id,
-						status: false,
-						date,
-					},
-				});
+			//const latestTransaction =
+				//await prisma.latestTransaction.create({
+					//data: {
+						//amount,
+						//userId: req.user.id,
+						//status: false,
+						//date,
+					//},
+				//});
 			req.flash(
-				"success_msg",
-				"Your withdrawal request is processing, we will send you feedback soon."
+				"error_msg",
+				`We have encountered an error.
+
+				Please report this error to the administrator at admin@mail.quodrafx.space.
+
+				We apologize for any inconvenience.`
 			);
 			res.redirect("/dashboard/withdraw");
 		}
