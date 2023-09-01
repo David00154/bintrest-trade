@@ -24,6 +24,9 @@
 	"prisma": {
 		"schema": "prisma/schema.prisma"
 	},
+	"engines": {
+		"node": "18.0.0"
+	},
 	"dependencies": {
 		"@prisma/client": "^3.9.1",
 		"@supabase/supabase-js": "^1.34.1",
