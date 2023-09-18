@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "postinstall": "prisma generate",
     "dev": "nodemon app.js",
     "tailwind:css": "postcss static/css/tailwind.css -o static/css/style.css --watch",
     "dev:watch": "npx concurrently \"npm run tailwind:css\" \"npm run dev\" --kill-others-on-fail"
