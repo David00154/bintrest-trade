@@ -71,7 +71,15 @@ app.use(function (req, res, next) {
 app.use("/", appRoute);
 app.use("/user", userRoute);
 app.use("/admin", adminRoute);
- app.use("/dashboard", dashboardRoute);
+app.use("/dashboard", dashboardRoute);
+app.get("/auth/logout", (req, res) => {
+	req.session.current_url = "";
+	req.logout();
+	req.flash("success_msg", "You are logged out");
+	res.redirect("/user/login");
+});
+
+
 //app.get("*", (req, res) => {
 //	res.render("500", { layout: false });
 //});

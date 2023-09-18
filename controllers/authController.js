@@ -160,6 +160,50 @@ const validateSignupFields = oneOf([
 	],
 ]);
 
+const validateResetPasswordEmail = oneOf([
+	body("email")
+		.notEmpty()
+		.withMessage("The email field should not be empty")
+		.custom(async (email = "") => {
+			console.log(email);
+			const user = await prisma.user.findUnique({
+				where: {
+					email,
+				},
+			});
+			if (!user) {
+				throw new Error(
+					"There is no account with this email"
+				);
+			}
+			return true;
+		})
+])
+
+const validateResetPasswordForm = oneOf([
+	[
+		body("password")
+			.notEmpty()
+			.withMessage("The password field should not be empty"),
+		body("email")
+			.notEmpty()
+			.withMessage("The email field should not be empty")
+			.custom(async (email = "") => {
+				const user = await prisma.user.findUnique({
+					where: {
+						email,
+					},
+				});
+				if (!user || user == null) {
+					throw new Error(
+						"There is no account with this email"
+					);
+				}
+				return true;
+			})
+	]
+])
+
 const ensureAuthenticated = (req, res, next) => {
 	//  console.log(req)
 	if (req.isAuthenticated()) {
@@ -187,4 +231,6 @@ module.exports = {
 	login,
 	validateDepositFormFields,
 	validateWithdrawFormFields,
+	validateResetPasswordEmail,
+	validateResetPasswordForm
 };

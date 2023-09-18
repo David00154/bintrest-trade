@@ -6,6 +6,8 @@ const {
 	validateDepositFormFields,
 } = require("../controllers/authController.js");
 const { prisma } = require("../utils/prisma.js");
+const { oneOf, body } = require("express-validator");
+const supabase = require("../utils/supabase.js");
 
 const router = express.Router();
 router.use((req, res, next) => {
@@ -190,14 +192,14 @@ router
 				"-" +
 				new Date(Date.now()).getDate(); // yyyy-mm-dd
 			//const latestTransaction =
-				//await prisma.latestTransaction.create({
-					//data: {
-						//amount,
-						//userId: req.user.id,
-						//status: false,
-						//date,
-					//},
-				//});
+			//await prisma.latestTransaction.create({
+			//data: {
+			//amount,
+			//userId: req.user.id,
+			//status: false,
+			//date,
+			//},
+			//});
 			req.flash(
 				"error_msg",
 				`We have encountered an error.
@@ -209,6 +211,66 @@ router
 			res.redirect("/dashboard/withdraw");
 		}
 	);
+
+router.route("/recover-password").get(ensureAuthenticated, async (req, res) => {
+	try {
+		let name =
+			req.user.name.split(" ")[0][0].toUpperCase() +
+			req.user.name.split(" ")[0].slice(1);
+		let user = req.user;
+		let email = req.user.email;
+		res.render(
+			"backend/recover-password",
+			buildObject({
+				title: "Recover Password",
+				layout: "backend/layout",
+				user,
+				name,
+				email,
+			})
+		);
+	} catch (err) {
+		console.log(err);
+		req.flash(
+			"error_msg",
+			"Error trying to locate the page, try loging in."
+		);
+		res.redirect("/user/login");
+	}
+}).post(ensureAuthenticated, oneOf([
+	[
+		body("password")
+			.notEmpty()
+			.withMessage("The password field should not be empty")
+	]
+]), validateErrors, async (req, res) => {
+
+	try {
+		// const { data, error } = await supabase.auth.updateUser({ password: req.body.password, })
+		// if (error != null) {
+		// 	if (error != null) {
+		// 		req.flash(
+		// 			"error_msg",
+		// 			error.message
+		// 		);
+		// 		return res.redirect("back");
+		// 	}
+		// }
+		const data = await prisma.user.update({
+			where: { email: req.user.email },
+			data: { password: req.body.password }
+		})
+		if (data) {
+
+			req.flash("success_msg", "Your password has been reset");
+			return res.redirect("/dashboard/recover-password")
+		}
+	} catch (error) {
+		console.log(error)
+		req.flash("error_msg", "Internal server error")
+		return res.redirect("back")
+	}
+})
 
 router
 	.route("/deposit")

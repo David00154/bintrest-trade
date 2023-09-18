@@ -22,12 +22,15 @@
                                         <%- include ("./partials/signup-input-form.ejs", {label: "Password*" ,
                                             placeholder: "Password" , id: "password" , type: "password" }) %>
                                     </div>
-                                    <button class="bg-custom-blue text-white p-3 w-full rounded-md text-lg font-tf-medium
-                                 type=" submit">Sign
+                                    <button
+                                        class="bg-custom-blue text-white p-3 w-full rounded-md text-lg font-tf-medium"
+                                        type=" submit">Sign
                                         in</button>
                                 </form>
             </div>
         </div>
-        <div class="text-lg font-tf-medium text-white text-center mb-6">Don't have an account? <a href="/user/signup"
+        <div class="text-lg font-tf-medium text-white text-center mb-1">Don't have an account? <a href="/user/signup"
                 class="cursor-pointer">Sign up</a></div>
+        <div class="text-lg font-tf-medium text-white text-center mb-6">Don't remember yout password? <a
+                href="/user/forgot-password" class="cursor-pointer">Reset password</a></div>
     </section>

@@ -8,33 +8,33 @@ module.exports.__passport__ = function (passport) {
 			async (email, password, done) => {
 				// console.log(prisma)
 
-				let { user, error } = await supabase.auth.signIn({
-					email: email,
-					password: password,
-				});
+				// let { user, error } = await supabase.auth.signInWithPassword({
+				// 	email: email,
+				// 	password: password,
+				// });
 
-				if (error) {
+				// if (error) {
+				// 	return done(null, false, {
+				// 		message: error.message,
+				// 	});
+				// } else {
+				const _user = await prisma.user.findUnique({
+					where: {
+						email,
+					},
+				});
+				if (!_user) {
 					return done(null, false, {
-						message: error.message,
+						message: "That email is not registered",
 					});
-				} else {
-					const _user = await prisma.user.findUnique({
-						where: {
-							email,
-						},
+				} else if (_user && _user.password !== password) {
+					return done(null, false, {
+						message: "Password incorrect",
 					});
-					if (!_user) {
-						return done(null, false, {
-							message: "That email is not registered",
-						});
-					} else if (_user && _user.password !== password) {
-						return done(null, false, {
-							message: "Password incorrect",
-						});
-					}
-					return done(null, _user);
 				}
+				return done(null, _user);
 			}
+			// }
 		)
 	);
 	passport.serializeUser((user, done) => {
