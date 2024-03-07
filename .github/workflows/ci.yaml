@@ -16,3 +16,8 @@ jobs:
           echo "Hello test"
           una -r
         shell: bash
+
+       - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "🍏 This job's status is ${{ job.status }}."
